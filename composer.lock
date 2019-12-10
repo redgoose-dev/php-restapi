@@ -1,0 +1,56 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "367264b41a76cd55a12ce37e23f395d4",
+    "packages": [
+        {
+            "name": "redgoose/console",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/redgoose-dev/php-console.git",
+                "reference": "82c6c237b9ac883125f4e279f9e74b953aacd3f1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/redgoose-dev/php-console/zipball/82c6c237b9ac883125f4e279f9e74b953aacd3f1",
+                "reference": "82c6c237b9ac883125f4e279f9e74b953aacd3f1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/Console.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "redgoose",
+                    "email": "scripter@me.com"
+                }
+            ],
+            "description": "description text",
+            "time": "2019-12-10T18:05:26+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.2.0"
+    },
+    "platform-dev": []
+}
