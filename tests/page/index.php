@@ -19,8 +19,30 @@ try
     'timeout' => 3,
     'debug' => true,
   ]);
-  $res = $restApi->request('get', '', null);
+  $res = $restApi->call('post', '', (object)[
+    'fooo' => 'barrr',
+    'fooo222' => 'barrr222222',
+  ]);
   Console::log($res);
+
+//  $res2 = RestAPI::request('get', 'http://localhost:9001', null, (object)[
+//    'outputType' => 'json',
+//  ]);
+//  Console::log($res2);
+
+//  $res3 = RestAPI::request(
+//    'get',
+//    'http://localhost:9001',
+//    (object)[
+//      'foo' => 'bar',
+//      'foo22' => 'bar22',
+//    ],
+//    (object)[
+//      'outputType' => 'json',
+//      'debug' => true,
+//    ]
+//  );
+//  Console::log($res3);
 }
 catch(\Exception $e)
 {

@@ -134,61 +134,68 @@ class RestAPI {
     }
   }
 
+
   /**
    * PUBLIC AREA
    */
 
   /**
-   * update preference
-   * 인스턴스 객체의 설정값을 업데이트하는데 사용합니다.
-   *
-   * @param object $pref
-   */
-  public function update($pref=null)
-  {
-    if (isset($pref->url) && $pref->url) $this->url = $pref->url;
-    if (isset($pref->headers) && is_array($pref->headers)) $this->headers = $pref->headers;
-    if (isset($pref->timeout)) $this->timeout = $pref->timeout;
-    if (isset($pref->debug)) $this->debug = $pref->debug;
-    if (isset($pref->outputType)) $this->outputType = $pref->outputType;
-  }
-
-  /**
    * request
    *
-   * @param string $method request method (get|post|put|delete)
-   * @param string $path request local url
-   * @param array|object $data
+   * @param string $method (get|post|put|delete)
+   * @param string $path url path
+   * @param object $data data & params
+   * @param object $options base options
+   *   $options = (object)[
+   *     'url' => string
+   *     'timeout' => int
+   *     'headers' => array
+   *     'debug' => boolean
+   *     'outputType' => string
+   *   ]
    * @return string|object
-   * @throws Exception
    */
-  public function request($method='get', $path='', $data=null)
+  static public function request($method='get', $path='', $data=null, $options=null)
   {
     $result = (object)[];
     $curl = curl_init();
 
+    // set params
+    $params = '';
+    if ($method === 'get' && $data)
+    {
+      $params = http_build_query($data);
+      $params = $params ? '?'.$params : '';
+    }
+
     // setting body
-    curl_setopt($curl, CURLOPT_TIMEOUT, 0);
-    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $this->timeout);
-    curl_setopt($curl, CURLOPT_URL, $this->url.$path);
+    if (isset($options->timeout))
+    {
+      curl_setopt($curl, CURLOPT_TIMEOUT, 0);
+      curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $options->timeout);
+    }
+    curl_setopt($curl, CURLOPT_URL, (isset($options->url) ? $options->url : '').$path.$params);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+    if ($data && $method !== 'get')
+    {
+      curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    }
     self::setMethod($curl, $method);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $this->headers);
-    curl_setopt($curl, CURLINFO_HEADER_OUT, $this->debug);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, isset($options->headers) ? $options->headers : []);
+    curl_setopt($curl, CURLINFO_HEADER_OUT, isset($options->debug) && $options->debug);
 
     // exec
     $response = curl_exec($curl);
 
     // get info
     $result->code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    if ($this->debug) $result->debug = (object)curl_getinfo($curl);
+    if (isset($options->debug) && $options->debug) $result->debug = (object)curl_getinfo($curl);
 
     // set message
     $result->message = self::getMessage($result->code, $curl);
 
     // set response
-    if ($this->outputType === 'json')
+    if (isset($options->outputType) && $options->outputType === 'json')
     {
       try
       {
@@ -211,16 +218,37 @@ class RestAPI {
   }
 
   /**
+   * update preference
+   * 인스턴스 객체의 설정값을 업데이트하는데 사용합니다.
    *
+   * @param object $pref
    */
-  static public function basic()
+  public function update($pref=null)
   {
-    //
-    var_dump('asd');
+    if (isset($pref->url) && $pref->url) $this->url = $pref->url;
+    if (isset($pref->headers) && is_array($pref->headers)) $this->headers = $pref->headers;
+    if (isset($pref->timeout)) $this->timeout = $pref->timeout;
+    if (isset($pref->debug)) $this->debug = $pref->debug;
+    if (isset($pref->outputType)) $this->outputType = $pref->outputType;
   }
 
-  static public function simple()
+  /**
+   * call request
+   *
+   * @param string $method (get|post|put|delete)
+   * @param string $path url path
+   * @param object $data data & params
+   * @return string|object
+   */
+  public function call($method='get', $path='', $data=null)
   {
-    // file_get_contents()
+    return self::request($method, $path, $data, (object)[
+      'url' => $this->url,
+      'timeout' => $this->timeout,
+      'headers' => $this->headers,
+      'debug' => $this->debug,
+      'outputType' => $this->outputType,
+    ]);
   }
+
 }
