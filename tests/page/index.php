@@ -7,28 +7,27 @@ require '../../src/RestAPI.php';
 //header('Content-Type: text/plain');
 error_reporting(E_ALL & ~E_NOTICE);
 
-
 // create instance
 try
 {
-  $restApi = new RestAPI((object)[
-//    'url' => 'https://goose.redgoose.me',
-    'url' => 'localhost:9001',
-    'headers' => [],
+  $res2 = RestAPI::request('get', 'http://localhost:9001', null, (object)[
     'outputType' => 'json',
-    'timeout' => 3,
-    'debug' => true,
   ]);
-  $res = $restApi->call('post', '', (object)[
-    'fooo' => 'barrr',
-    'fooo222' => 'barrr222222',
-  ]);
-  Console::log($res);
+  Console::log($res2);
 
-//  $res2 = RestAPI::request('get', 'http://localhost:9001', null, (object)[
+  // test localhost:9001
+//  $restApi = new RestAPI((object)[
+//    'url' => 'localhost:9001',
+//    'headers' => ['foo: bar'],
 //    'outputType' => 'json',
+//    'timeout' => 3,
+//    'debug' => true,
 //  ]);
-//  Console::log($res2);
+//  $res = $restApi->call('delete', '', (object)[
+//    'fooo' => 'barrr',
+//    'fooo222' => 'barrr222222',
+//  ]);
+//  Console::log($res);
 
 //  $res3 = RestAPI::request(
 //    'get',

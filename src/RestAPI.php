@@ -1,6 +1,6 @@
 <?php
 namespace redgoose;
-use Exception;
+use Exception, CURLFile;
 
 /**
  * RestAPI
@@ -134,6 +134,31 @@ class RestAPI {
     }
   }
 
+  /**
+   * filtering files
+   * `$_FILES` 값을 리얼패스 파일주소로 변환시킵니다.
+   *
+   * @param array $data
+   * @param array $file
+   * @param string $key
+   * @return array
+   */
+  private static function filteringFiles($data, $file, $key)
+  {
+    if (is_array($file['tmp_name']) && $file['tmp_name'][0])
+    {
+      for ($i=0; $i<count($file['tmp_name']); $i++)
+      {
+        $data["{$key}[{$i}]"] = new CURLFile($file['tmp_name'][$i], $file['type'][$i], $file['name'][$i]);
+      }
+    }
+    else if (is_string($file['tmp_name']) && $file['tmp_name'])
+    {
+      $data[$key] = new CURLFile($file['tmp_name'], $file['type'], $file['name']);
+    }
+    return $data;
+  }
+
 
   /**
    * PUBLIC AREA
@@ -144,28 +169,40 @@ class RestAPI {
    *
    * @param string $method (get|post|put|delete)
    * @param string $path url path
-   * @param object $data data & params
+   * @param object|array $data data & params
+   * @param array $files files
    * @param object $options base options
    *   $options = (object)[
    *     'url' => string
-   *     'timeout' => int
-   *     'headers' => array
-   *     'debug' => boolean
    *     'outputType' => string
+   *     'headers' => array
+   *     'timeout' => int
+   *     'debug' => boolean
    *   ]
    * @return string|object
    */
-  static public function request($method='get', $path='', $data=null, $options=null)
+  static public function request($method='get', $path='', $data=null, $files=null, $options=null)
   {
     $result = (object)[];
     $curl = curl_init();
 
-    // set params
+    // set data and params
     $params = '';
     if ($method === 'get' && $data)
     {
       $params = http_build_query($data);
       $params = $params ? '?'.$params : '';
+    }
+    else if ($data || $files)
+    {
+      $data = (array)$data;
+      if ($files && is_array($files) && count($files))
+      {
+        foreach ($files as $key=>$file)
+        {
+          $data = self::filteringFiles($data, $file, $key);
+        }
+      }
     }
 
     // setting body
@@ -200,6 +237,7 @@ class RestAPI {
       try
       {
         $result->response = json_decode($response, JSON_PRETTY_PRINT);
+        $result->response = (object)$result->response;
       }
       catch (Exception $e)
       {
@@ -237,12 +275,13 @@ class RestAPI {
    *
    * @param string $method (get|post|put|delete)
    * @param string $path url path
-   * @param object $data data & params
+   * @param object|array $data data & params
+   * @param array $files files
    * @return string|object
    */
-  public function call($method='get', $path='', $data=null)
+  public function call($method='get', $path='', $data=null, $files=null)
   {
-    return self::request($method, $path, $data, (object)[
+    return self::request($method, $path, $data, $files, (object)[
       'url' => $this->url,
       'timeout' => $this->timeout,
       'headers' => $this->headers,
