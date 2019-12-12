@@ -239,7 +239,7 @@ class RestAPI {
     {
       try
       {
-        $result->response = json_decode($response, JSON_PRETTY_PRINT);
+        $result->response = json_decode($response, false);
         $result->response = (object)$result->response;
       }
       catch (Exception $e)
