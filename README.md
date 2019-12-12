@@ -157,7 +157,7 @@ $restapi->update($options);
 개발을 위하여 파일 업로드 기능에 관한 샘플 소스를 만들었습니다.
 
 [page/upload.php](https://github.com/redgoose-dev/php-restapi/blob/master/tests/page/upload.php) 파일은 업로드하는 폼과 첨부된 파일로 요청하는 부분을 예제로 활용할 수 있습니다.  
-그리고 [api/upload.php](https://github.com/redgoose-dev/php-restapi/blob/master/tests/api/upload.php) 파일로 그 결과를 출력하여 결과를 받아올 수 있습니다.
+그리고 [api/upload.php](https://github.com/redgoose-dev/php-restapi/blob/master/tests/api/upload.php) 파일을 업로드하고 그 결과를 출력하고 받아올 수 있습니다.
 
 `curl`은 서로 같은 도메인으로 요청할 수 없기 때문에 테스트용 API 서버서를 하나 더 띄었습니다.  
 그것은 `script.sh` 스크립트를 통하여 서로다른 포트로 로컬서버를 띄어서 파일 업로드를 개발하고 테스트하게 되었습니다.
