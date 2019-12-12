@@ -10,7 +10,7 @@ PHP 환경에서 `API`요청을 할 수 있도록 도와주는 인터페이스 �
 sudo apt-get install php7.4-curl
 ```
 
-# Install
+## Install
 
 다음과 같이 `composer`를 통하여 패키지를 설치합니다.
 
@@ -37,7 +37,7 @@ $restapi = new RestAPI();
 소스를 다운로드하고 직접 연결할때 사용하는 방법입니다.
 
 ```php
-require 'src/RestAPI';
+require 'src/RestAPI.php';
 use redgoose\RestAPI;
 
 $restapi = new RestAPI();
