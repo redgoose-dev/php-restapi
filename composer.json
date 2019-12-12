@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": ">=7.2.0",
-        "redgoose/console": "^0.1"
+        "redgoose/console": "^1.0"
     },
     "autoload": {
         "classmap": ["src/RestAPI.php"]
