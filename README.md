@@ -90,10 +90,10 @@ $restapi = new RestAPI((object)[
 ```php
 use redgoose\RestAPI;
 
-$response = RestAPI::request($method, $path, $data, $options);
+$response = RestAPI::request($method, $path, $data, $files, $options);
 
 // example
-$response = RestAPI::request('get', 'https://api.domain.com', null, (object)[]);
+$response = RestAPI::request('get', 'https://api.domain.com', null, null, (object)[]);
 ```
 
 이 메서드는 다음과 같은 인자값을 사용합니다.
@@ -101,23 +101,24 @@ $response = RestAPI::request('get', 'https://api.domain.com', null, (object)[]);
 | Name     | Type         | Default | Description |
 | -------- | ------------ | ------- | ----------- |
 | $method  | string       | 'get'   | 요청 메서드 |
-| $path    | string       | ''      | 요청 url 주소 |
-| $data    | object|array | null    | `mehtod=get`: url query string 방식으로 사용하고, 그 외에는 `data`로 사용됩니다. |
+| $path    | string       | ''      | 요청 URL 주소 |
+| $data    | object,array | null    | `mehtod=get`: url query string 방식으로 사용하고, 그 외에는 `data`로 사용됩니다. |
+| $files   | array        | null    | `$_FILES` 형식의 값 |
 | $options | object       | null    | `Options` 섹션에서 사용되는 값들과 동일합니다. |
 
 ### call
 
 요청할때 사용하는 메서드입니다.  
-이 메서드 내부에서 `RestAPI::request()` 함수를 사용하기 때문에 사용법은 `Methods/request`섹션과 비슷합니다.
+이 메서드 내부에서 `RestAPI::request()`함수를 사용하기 때문에 사용법은 `Methods/request`섹션과 비슷합니다.
 
 ```php
 use redgoose\RestAPI;
 
 $restapi = new RestAPI((object)[]);
-$response = $restapi->call($method, $path, $data);
+$response = $restapi->call($method, $path, $data, $files);
 
 // example
-$response = $restapi->call('get', 'https://api.domain.com', null);
+$response = $restapi->call('get', 'https://api.domain.com', null, null);
 ```
 
 이 메서드는 다음과 같은 인자값을 사용합니다.
@@ -125,12 +126,13 @@ $response = $restapi->call('get', 'https://api.domain.com', null);
 | Name     | Type         | Default | Description |
 | -------- | ------------ | ------- | ----------- |
 | $method  | string       | 'get'   | 요청 메서드 |
-| $path    | string       | ''      | 요청 url 주소 |
-| $data    | object|array | null    | `mehtod=get`: url query string 방식으로 사용하고, 그 외에는 `data`로 사용됩니다. |
+| $path    | string       | ''      | 요청 URL 주소 |
+| $data    | object,array | null    | `mehtod=get`: url query string 방식으로 사용하고, 그 외에는 `data`로 사용됩니다. |
+| $files   | array        | null    | `$_FILES` 형식의 값 |
 
 ### update
 
-인스턴스의 값을 수정할때 사용됩니다.
+인스턴스의 값을 업데이트할때 사용 수 있습니다.
 
 ```php
 use redgoose\RestAPI;
@@ -144,3 +146,20 @@ $restapi->update($options);
 | Name     | Type   | Default | Description |
 | -------- | ------ | ------- | ----------- |
 | $options | object | null    | `Options` 섹션에서 사용되는 값들과 동일합니다. |
+
+
+## Examples
+
+[/tests](https://github.com/redgoose-dev/php-restapi/tree/master/tests)에서 개발을 위하여 만든 흔적들을 확인할 수 있습니다.
+
+### File upload
+
+개발을 위하여 파일 업로드 기능에 관한 샘플 소스를 만들었습니다.
+
+[page/file-upload.php](https://github.com/redgoose-dev/php-restapi/blob/master/tests/page/file-upload.php) 파일은 업로드하는 폼과 첨부된 파일로 요청하는 부분을 예제로 활용할 수 있습니다.  
+그리고 [api/upload.php](https://github.com/redgoose-dev/php-restapi/blob/master/tests/api/upload.php) 파일로 그 결과를 출력하여 결과를 받아올 수 있습니다.
+
+`curl`은 서로 같은 도메인으로 요청할 수 없기 때문에 테스트용 API 서버서를 하나 더 띄었습니다.  
+그것은 `script.sh` 스크립트를 통하여 서로다른 포트로 로컬서버를 띄어서 파일 업로드를 개발하고 테스트하게 되었습니다.
+
+API 서버에서는 `$_FILES` 형식으로 넘어가면 실질적으로 파일이 업로드가 가능하다는것을 알게되어 값을 넘겨주기 위한 갑 처리가 좀 더 필요하게 되었습니다.

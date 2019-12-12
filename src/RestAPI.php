@@ -195,7 +195,10 @@ class RestAPI {
     }
     else if ($data || $files)
     {
+      // TODO: PUT, PATCH, DELETE 값 테스트 해보고 값이 안나오면 처리 개발필요함.
+      // `$_POST`같은 값을 `$_FILES`와 합치기 위한 준비를 합니다.
       $data = (array)$data;
+      // $_FILES 값을 `curl`을 통하여 보낼 수 있도록 값을 정리합니다.
       if ($files && is_array($files) && count($files))
       {
         foreach ($files as $key=>$file)

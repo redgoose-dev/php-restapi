@@ -1,4 +1,6 @@
-/vendor/
+vendor/
 .idea/
 
 .DS_Store
+tests/api/files/*
+!tests/api/files/.keep

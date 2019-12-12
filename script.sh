@@ -2,7 +2,7 @@
 
 case "$1" in
   page)
-    php -S 0.0.0.0:9000 -t ./tests/page
+    php -S 0.0.0.0:8000 -t ./tests/page
     ;;
   api)
     php -S 0.0.0.0:9001 -t ./tests/api
