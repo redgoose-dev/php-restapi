@@ -223,6 +223,7 @@ class RestAPI {
     self::setMethod($curl, $method);
     curl_setopt($curl, CURLOPT_HTTPHEADER, isset($options->headers) ? $options->headers : []);
     curl_setopt($curl, CURLINFO_HEADER_OUT, isset($options->debug) && $options->debug);
+    curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
 
     // exec
     $response = curl_exec($curl);
